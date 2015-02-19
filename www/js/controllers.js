@@ -5,7 +5,38 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function($scope) {})
 
-.controller('RegistroCtrl', function($scope) {})
+.controller('RegistroCtrl', function($scope,$http,$state) {
+        $scope.usuario={};
+        $scope.registro=function(){
+            var url="https://awnotepad.azure-mobile.net/tables/usuarios";
+            $http.defaults.headers.common={
+                'X-ZUMO-APPLICATION':'dpRuizzhXZcJOEFKRujsFLigRMUTHQ39',
+                'Access-Control-Allow-Origin':'*'
+
+            };
+
+            $http.post(url,$scope.usuario).then(
+                function(res){
+                    alert("Usuario creado con exito");
+                    $state.go("noLogin.login");
+
+                }
+                ,
+                function(err){
+                   alert(err.message);
+
+                }
+
+
+            );
+
+
+        }
+
+
+
+
+    })
 
 .controller('ChatsCtrl', function($scope, Chats) {
   $scope.chats = Chats.all();
