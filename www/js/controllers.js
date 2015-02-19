@@ -5,7 +5,8 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function($scope) {})
 
-.controller('RegistroCtrl', function($scope,$http,$state) {
+.controller('RegistroCtrl', function($scope,$http,$state,
+                                     $ionicLoading,$ionicPopup) {
         $scope.usuario={};
         $scope.registro=function(){
             var url="https://awnotepad.azure-mobile.net/tables/usuarios";
@@ -15,15 +16,36 @@ angular.module('starter.controllers', [])
 
             };
 
+            $ionicLoading.show(
+                {
+                    template:'Creando cuenta de usuario'
+
+                }
+
+            );
+
             $http.post(url,$scope.usuario).then(
                 function(res){
-                    alert("Usuario creado con exito");
+                    $ionicLoading.hide();
+
+                    $ionicPopup.alert({
+                        template:'Usuario creado con exito',
+                        title: '¡Exito!'
+
+                    });
+
                     $state.go("noLogin.login");
 
                 }
                 ,
                 function(err){
-                   alert(err.message);
+                    $ionicLoading.hide();
+
+                    $ionicPopup.alert({
+                        template:'Error al crear el usuario',
+                        title: '¡Error!'
+
+                    });
 
                 }
 
