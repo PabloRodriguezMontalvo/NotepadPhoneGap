@@ -3,7 +3,41 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope) {})
 
 
-.controller('LoginCtrl', function($scope) {})
+.controller('LoginCtrl', function($scope,$ionicLoading,$ionicPopup,
+                                  $state,Usuarios) {
+        $scope.usuario={};
+
+        $scope.iniciarSesion=function(){
+
+            $ionicLoading.show(
+                {
+                    template:'Validando cuenta de usuario'
+
+                });
+
+            Usuarios.validarUsuario($scope.usuario).then(
+                function(res){
+                    $ionicLoading.hide();
+                    if(res.length>0) {
+                        localStorage.usuario = JSON.stringify(res[0]);
+                        $state.go("tab.dash");
+                    }
+                    else{
+                        $ionicPopup.alert({
+                            template:'Credenciales incorrectas',
+                            title: '¡Error!'
+                        });
+                    }
+                },
+                function(err){
+                    $ionicLoading.hide();
+                    $ionicPopup.alert({
+                        template:'Error al validar el usuario',
+                        title: '¡Error!'
+                    });
+                });
+        };
+    })
 
 .controller('RegistroCtrl', function($scope,$http,$state,
                                      $ionicLoading,$ionicPopup) {
