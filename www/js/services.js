@@ -73,7 +73,41 @@ angular.module('starter.services', [])
             return ($q.reject(resp.data.message));
         }
 })
+    .factory('Notas', function($http,$q) {
+        var url="https://awnotepad.azure-mobile.net/tables/notas";
+        $http.defaults.headers.common={
+            'X-ZUMO-APPLICATION':'dpRuizzhXZcJOEFKRujsFLigRMUTHQ39',
+            'Access-Control-Allow-Origin':'*'
 
+        };
+        return {
+            getNotasPorBloc:function(idBloc){
+                var query="?$filter=idBloc eq '"+idBloc+"'";
+                var request=$http(
+                    {
+                        url:url+query,
+                        method:'get'
+
+                    });
+
+                return request.then(ok,err);
+
+
+            }
+
+        }
+        function ok(resp){
+            return resp.data;
+
+        }
+        function err(resp){
+            if(!angular.isObject(resp.data) || !resp.data.message){
+                return($q.reject("Error desconocido"));
+
+            }
+            return ($q.reject(resp.data.message));
+        }
+    })
 /**
  * A simple example service that returns some data.
  */

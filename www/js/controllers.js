@@ -110,9 +110,22 @@ angular.module('starter.controllers', [])
         });
     })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+.controller('BlocDetailCtrl', function($scope, $stateParams, Notas) {
+
+  $scope.notas=[];
+        Notas.getNotasPorBloc($stateParams.blocId).then(
+            function(res){
+                $scope.notas=res;
+                $scope.apply();
+            },
+            function(err){
+                alert(err);
+            }
+        );
+
+
+
+    })
 
 .controller('FriendsCtrl', function($scope, Friends) {
   $scope.friends = Friends.all();
