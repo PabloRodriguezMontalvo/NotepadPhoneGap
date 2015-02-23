@@ -57,51 +57,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
               }
           }
       })
-
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.blocs', {
+      url: '/blocs',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-blocs': {
+          templateUrl: 'templates/tab-blocs.html',
+          controller: 'BlocsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.notas', {
+      url: '/blocs/:blocId',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.friends', {
-      url: '/friends',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      }
-    })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
+        'tab-blocs': {
+          templateUrl: 'templates/bloc-detail.html',
+          controller: 'BlocDetailCtrl'
         }
       }
     })

@@ -20,7 +20,7 @@ angular.module('starter.controllers', [])
                     $ionicLoading.hide();
                     if(res.length>0) {
                         localStorage.usuario = JSON.stringify(res[0]);
-                        $state.go("tab.dash");
+                        $state.go("tab.blocs");
                     }
                     else{
                         $ionicPopup.alert({
@@ -94,12 +94,21 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  }
-})
+.controller('BlocsCtrl', function($scope,Blocs) {
+        $scope.blocs=[];
+
+        var us=JSON.parse(localStorage.usuario);
+        Blocs.getBlocs(us.id).then(function(res){
+
+            $scope.blocs=res;
+            $scope.apply();
+
+        },
+        function(err){
+            alert(err);
+
+        });
+    })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
