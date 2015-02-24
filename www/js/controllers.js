@@ -4,11 +4,16 @@ angular.module('starter.controllers', [])
 
 
 .controller('LoginCtrl', function($scope,$ionicLoading,$ionicPopup,
-                                  $state,Usuarios) {
+                                  $state,Usuarios,Conexion) {
         $scope.usuario={};
 
-        $scope.iniciarSesion=function(){
 
+
+        $scope.iniciarSesion=function(){
+            if(Conexion.getEstado())
+                alert("Con red");
+            else
+                alert("Sin red");
             $ionicLoading.show(
                 {
                     template:'Validando cuenta de usuario'
@@ -37,6 +42,17 @@ angular.module('starter.controllers', [])
                     });
                 });
         };
+
+
+
+
+        if(localStorage.usuario){
+            $scope.usuario=JSON.parse(localStorage.usuario);
+
+            $scope.iniciarSesion();
+
+
+        }
     })
 
 .controller('RegistroCtrl', function($scope,$http,$state,
