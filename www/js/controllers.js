@@ -122,7 +122,7 @@ angular.module('starter.controllers', [])
 
             $scope.blocs=res;
                 Bbdd.guardarBlocs(res);
-            $scope.apply();
+
 
         },
         function(err){
@@ -138,7 +138,7 @@ angular.module('starter.controllers', [])
             function(res){
                 $scope.notas=res;
                 Bbdd.guardarNotas(res);
-                $scope.apply();
+
             },
             function(err){
                 alert(err);
