@@ -4,16 +4,12 @@ angular.module('starter.controllers', [])
 
 
 .controller('LoginCtrl', function($scope,$ionicLoading,$ionicPopup,
-                                  $state,Usuarios,Conexion) {
+                                  $state,$ionicPlatform,Usuarios,Conexion) {
         $scope.usuario={};
 
 
 
         $scope.iniciarSesion=function(){
-            if(Conexion.getEstado())
-                alert("Con red");
-            else
-                alert("Sin red");
             $ionicLoading.show(
                 {
                     template:'Validando cuenta de usuario'
@@ -44,15 +40,23 @@ angular.module('starter.controllers', [])
         };
 
 
+        $ionicPlatform.ready(function(){
+    if(Conexion.getEstado())
+        alert("Con red");
+    else
+        alert("Sin red");
+
+    if(localStorage.usuario){
+        $scope.usuario=JSON.parse(localStorage.usuario);
+
+        $scope.iniciarSesion();
 
 
-        if(localStorage.usuario){
-            $scope.usuario=JSON.parse(localStorage.usuario);
-
-            $scope.iniciarSesion();
+    }
 
 
-        }
+});
+
     })
 
 .controller('RegistroCtrl', function($scope,$http,$state,
@@ -110,13 +114,14 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('BlocsCtrl', function($scope,Blocs) {
+.controller('BlocsCtrl', function($scope,Blocs,Bbdd) {
         $scope.blocs=[];
 
         var us=JSON.parse(localStorage.usuario);
         Blocs.getBlocs(us.id).then(function(res){
 
             $scope.blocs=res;
+                Bbdd.guardarBlocs(res);
             $scope.apply();
 
         },
@@ -126,12 +131,13 @@ angular.module('starter.controllers', [])
         });
     })
 
-.controller('BlocDetailCtrl', function($scope, $stateParams, Notas) {
+.controller('BlocDetailCtrl', function($scope, $stateParams, Notas,Bbdd) {
 
   $scope.notas=[];
         Notas.getNotasPorBloc($stateParams.blocId).then(
             function(res){
                 $scope.notas=res;
+                Bbdd.guardarNotas(res);
                 $scope.apply();
             },
             function(err){

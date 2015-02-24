@@ -118,7 +118,8 @@ angular.module('starter.services', [])
         try{
             var conn=navigator.connection.type;
 
-            if(conn.NONE || conn.UNKNOWN || conn.CELL)
+           if(conn==Connection.NONE || conn==Connection.UNKNOWN ||
+                conn==Connection.CELL)
                 return false;
             return true;
 
@@ -131,4 +132,69 @@ angular.module('starter.services', [])
     }
 
   }
-});
+})
+    .factory("Bbdd",function(){
+        var db=openDatabase("Notas","","Base notas",1024*1024,
+            function(db) {
+                db.transaction(function (tx) {
+                        tx.executeSql("create table if not exists Blocs " +
+                        "(id unique,nombre,img,descripcion)");
+
+                        tx.executeSql("create table if not exists Notas " +
+                        "(id unique,nombre,texto)");
+
+
+                    },
+
+
+                    function (err) {
+
+                        alert(err.toString());
+
+                    });
+            });
+
+return {
+    guardarBlocs: function (blocs) {
+        var db = openDatabase("Notas", "", "Base notas", 1024 * 1024);
+
+        db.transaction(function (tx) {
+            tx.executeSql("delete from Blocs");
+
+            for (var i = 0; i < blocs.length; i++) {
+
+                tx.executeSql("insert into Blocs values(?,?,?,?)",
+                    [blocs[i].id, blocs[i].nombre, blocs[i].img,
+                        blocs[i].descripcion]
+                );
+
+            }
+
+
+        });
+
+
+    },
+    guardarNotas: function (notas) {
+        var db = openDatabase("Notas", "", "Base notas", 1024 * 1024);
+
+        db.transaction(function (tx) {
+            tx.executeSql("delete from Notas");
+
+            for (var i = 0; i < notas.length; i++) {
+
+                tx.executeSql("insert into Notas values(?,?,?)",
+                    [notas[i].id, notas[i].nombre, notas[i].texto]
+                );
+
+            }
+
+
+        });
+
+
+    }
+
+}
+})
+;
