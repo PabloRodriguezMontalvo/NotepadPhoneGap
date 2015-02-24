@@ -119,12 +119,12 @@ angular.module('starter.services', [])
             getEstado: function () {
 
                 try {
-                    var conn = navigator.connection.type;
+                   /* var conn = navigator.connection.type;
 
                     if (conn == Connection.NONE || conn == Connection.UNKNOWN ||
                         conn == Connection.CELL)
-                        return false;
-                    return true;
+                        return false;*/
+                    return false;
 
 
                 } catch (e) {
@@ -137,14 +137,14 @@ angular.module('starter.services', [])
         }
     })
     .factory("Bbdd", function () {
-        var db = openDatabase("Notas", "", "Base notas", 1024 * 1024,
+        var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024,
             function (db) {
                 db.transaction(function (tx) {
                         tx.executeSql("create table if not exists Blocs " +
                         "(id unique,nombre,img,descripcion)");
 
                         tx.executeSql("create table if not exists Notas " +
-                        "(id unique,nombre,texto)");
+                        "(id unique,nombre,contenido,idBloc)");
 
 
                     },
@@ -159,7 +159,7 @@ angular.module('starter.services', [])
 
         return {
             guardarBlocs: function (blocs) {
-                var db = openDatabase("Notas", "", "Base notas", 1024 * 1024);
+                var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024);
 
                 db.transaction(function (tx) {
                     tx.executeSql("delete from Blocs");
@@ -178,16 +178,17 @@ angular.module('starter.services', [])
 
 
             },
-            guardarNotas: function (notas) {
-                var db = openDatabase("Notas", "", "Base notas", 1024 * 1024);
+            guardarNotas: function (notas,idBloc) {
+                var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024);
 
                 db.transaction(function (tx) {
-                    tx.executeSql("delete from Notas");
+                    tx.executeSql("delete from Notas where idBloc=?",[idBloc]);
 
                     for (var i = 0; i < notas.length; i++) {
 
-                        tx.executeSql("insert into Notas values(?,?,?)",
-                            [notas[i].id, notas[i].nombre, notas[i].texto]
+                        tx.executeSql("insert into Notas values(?,?,?,?)",
+                            [notas[i].id, notas[i].nombre, notas[i].contenido,
+                            notas[i].idBloc]
                         );
 
                     }
@@ -195,6 +196,29 @@ angular.module('starter.services', [])
 
                 });
 
+
+            },
+            obtenerBlocs:function(){
+                var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024);
+                var deferred=$q.defer();
+
+                db.transaction(function(tx){
+
+                    tx.executeSql("select * from Blocs",function(tran,res){
+
+                        deferred.resolve(res);
+
+                    },
+                    function(tran,err){
+                        deferred.reject(err);
+
+                    }
+                    );
+
+
+
+                });
+                return deferred.promise;
 
             }
 

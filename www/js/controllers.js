@@ -41,15 +41,20 @@ angular.module('starter.controllers', [])
 
 
         $ionicPlatform.ready(function(){
-    if(Conexion.getEstado())
-        alert("Con red");
-    else
-        alert("Sin red");
+            if(localStorage.usuario){
+                $scope.usuario=JSON.parse(localStorage.usuario);
+                if(Conexion.getEstado()){
+                    $scope.iniciarSesion();
+                }
 
-    if(localStorage.usuario){
-        $scope.usuario=JSON.parse(localStorage.usuario);
+                else
+                {
+                    $state.go("tab.blocs");
 
-        $scope.iniciarSesion();
+
+                }
+
+
 
 
     }
@@ -114,21 +119,31 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('BlocsCtrl', function($scope,Blocs,Bbdd) {
+.controller('BlocsCtrl', function($scope,Blocs,Bbdd,Conexion) {
         $scope.blocs=[];
 
         var us=JSON.parse(localStorage.usuario);
-        Blocs.getBlocs(us.id).then(function(res){
 
-            $scope.blocs=res;
-                Bbdd.guardarBlocs(res);
+        if(Conexion.getEstado()){
+            Blocs.getBlocs(us.id).then(function(res){
+
+                    $scope.blocs=res;
+                    Bbdd.guardarBlocs(res);
 
 
-        },
-        function(err){
-            alert(err);
+                },
+                function(err){
+                    alert(err);
 
-        });
+                });
+
+        }
+        else{
+
+            //Aqui pillo desde la bbdd
+
+        }
+
     })
 
 .controller('BlocDetailCtrl', function($scope, $stateParams, Notas,Bbdd) {
