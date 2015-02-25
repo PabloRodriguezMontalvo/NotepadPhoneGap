@@ -140,7 +140,14 @@ angular.module('starter.controllers', [])
         }
         else{
 
-            //Aqui pillo desde la bbdd
+            Bbdd.obtenerBlocs().then(function(res){
+                $scope.blocs=res;
+
+
+            },function(err){
+                alert(err);
+
+            });
 
         }
 

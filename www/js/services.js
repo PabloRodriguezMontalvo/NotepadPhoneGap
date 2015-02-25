@@ -136,7 +136,7 @@ angular.module('starter.services', [])
 
         }
     })
-    .factory("Bbdd", function () {
+    .factory("Bbdd", function ($q) {
         var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024,
             function (db) {
                 db.transaction(function (tx) {
@@ -199,14 +199,31 @@ angular.module('starter.services', [])
 
             },
             obtenerBlocs:function(){
-                var db = openDatabase("NotasV2", "", "Base notas", 1024 * 1024);
+                var db = openDatabase("NotasV2", "", "Base notas",
+                    1024 * 1024);
                 var deferred=$q.defer();
 
                 db.transaction(function(tx){
 
-                    tx.executeSql("select * from Blocs",function(tran,res){
+                    tx.executeSql("select * from Blocs",[],
+                        function(tran,res){
 
-                        deferred.resolve(res);
+                            var blocs=[];
+
+                            for(var i=0;i<res.rows.length;i++){
+                                var o={
+                                    id:res.rows.item(i).id,
+                                    nombre:res.rows.item(i).nombre,
+                                    img:res.rows.item(i).img,
+                                    descripcion:res.rows.item(i).descripcion
+
+                                };
+                                blocs.push(o);
+
+                            }
+
+
+                        deferred.resolve(blocs);
 
                     },
                     function(tran,err){
