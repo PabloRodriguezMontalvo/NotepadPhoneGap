@@ -237,6 +237,47 @@ angular.module('starter.services', [])
                 });
                 return deferred.promise;
 
+            },
+            obtenerNotas:function(idBloc){
+                var db = openDatabase("NotasV2", "", "Base notas",
+                    1024 * 1024);
+                var deferred=$q.defer();
+
+                db.transaction(function(tx){
+
+                    tx.executeSql("select * from Notas where idBloc=?"
+                        ,[idBloc],
+                        function(tran,res){
+
+                            var notas=[];
+
+                            for(var i=0;i<res.rows.length;i++){
+                                var o={
+                                    id:res.rows.item(i).id,
+                                    nombre:res.rows.item(i).nombre,
+                                    contenido:res.rows.item(i).contenido,
+                                    idBloc:res.rows.item(i).idBloc
+
+                                };
+                                notas.push(o);
+
+                            }
+
+
+                            deferred.resolve(notas);
+
+                        },
+                        function(tran,err){
+                            deferred.reject(err);
+
+                        }
+                    );
+
+
+
+                });
+                return deferred.promise;
+
             }
 
         }

@@ -153,21 +153,36 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('BlocDetailCtrl', function($scope, $stateParams, Notas,Bbdd) {
+.controller('BlocDetailCtrl', function($scope, $stateParams,Conexion, Notas,Bbdd) {
 
   $scope.notas=[];
-        Notas.getNotasPorBloc($stateParams.blocId).then(
-            function(res){
-                $scope.notas=res;
-                Bbdd.guardarNotas(res);
 
-            },
-            function(err){
-                alert(err);
-            }
-        );
+        if(Conexion.getEstado()) {
+            Notas.getNotasPorBloc($stateParams.blocId).then(
+                function (res) {
+                    $scope.notas = res;
+                    Bbdd.guardarNotas(res);
 
+                },
+                function (err) {
+                    alert(err);
+                }
+            );
 
+        }
+        else{
+            Bbdd.obtenerNotas($stateParams.blocId).then(
+                function (res) {
+                    $scope.notas=res;
+                },
+                function(err){
+
+                    alert(err);
+                }
+
+            );
+
+        }
 
     })
 
